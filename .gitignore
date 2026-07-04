@@ -1,0 +1,38 @@
+# ─── Dependencies ─────────────────────────────────────────────────────────────
+node_modules/
+
+# ─── Environment Variables (NEVER commit these — they contain secrets) ────────
+.env
+.env.local
+.env.*.local
+services/api/.env
+apps/web/.env.local
+
+# ─── Build Outputs ────────────────────────────────────────────────────────────
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# ─── IDE & OS ─────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Prisma ───────────────────────────────────────────────────────────────────
+services/api/prisma/migrations/**/migration_lock.toml
+
+# ─── Debug Logs ───────────────────────────────────────────────────────────────
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ─── Firebase ─────────────────────────────────────────────────────────────────
+**/firebase-adminsdk*.json
+**/serviceAccountKey*.json

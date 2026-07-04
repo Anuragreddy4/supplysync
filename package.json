@@ -1,0 +1,28 @@
+{
+  "name": "supplysync-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SupplySync AI - Hyperlocal B2B Supply Chain Platform",
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api dev",
+    "dev:agents": "pnpm --filter ai-agents dev",
+    "dev": "pnpm --filter \"*\" --parallel dev",
+    "build": "pnpm --filter \"*\" build",
+    "db:migrate": "pnpm --filter api prisma migrate dev"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "prisma",
+      "@prisma/engines",
+      "@firebase/util",
+      "unrs-resolver",
+      "esbuild",
+      "protobufjs"
+    ]
+  }
+}

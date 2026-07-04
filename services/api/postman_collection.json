@@ -1,0 +1,219 @@
+{
+  "info": {
+    "name": "SupplySync AI",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Session",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{firebase_token}}" } ],
+            "url": { "raw": "{{baseUrl}}/api/auth/session", "host": ["{{baseUrl}}"], "path": ["api", "auth", "session"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{firebase_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"role\": \"supplier\",\n    \"business_type\": \"manufacturer\",\n    \"business_name\": \"Test Co\",\n    \"phone\": \"+1234567890\",\n    \"latitude\": 40.7128,\n    \"longitude\": -74.0060\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Listings",
+      "item": [
+        {
+          "name": "Get Geo-Filtered Listings",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{firebase_token}}" } ],
+            "url": { "raw": "{{baseUrl}}/api/listings?lat=40.7128&lng=-74.0060&radius_km=50&material=steel", "host": ["{{baseUrl}}"], "path": ["api", "listings"], "query": [{ "key": "lat", "value": "40.7128" }, { "key": "lng", "value": "-74.0060" }, { "key": "radius_km", "value": "50" }, { "key": "material", "value": "steel" }] }
+          }
+        },
+        {
+          "name": "Create Listing",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{firebase_token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n    \"material_name\": \"Steel\",\n    \"category\": \"Metals\",\n    \"stock_qty\": 1000,\n    \"unit\": \"kg\",\n    \"price_per_unit\": 2.50\n}" },
+            "url": { "raw": "{{baseUrl}}/api/listings", "host": ["{{baseUrl}}"], "path": ["api", "listings"] }
+          }
+        },
+        {
+          "name": "Update Listing",
+          "request": {
+            "method": "PATCH",
+            "header": [ { "key": "Authorization", "value": "Bearer {{firebase_token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n    \"price_per_unit\": 2.45\n}" },
+            "url": { "raw": "{{baseUrl}}/api/listings/:id", "host": ["{{baseUrl}}"], "path": ["api", "listings", ":id"], "variable": [{ "key": "id", "value": "LISTING_ID" }] }
+          }
+        },
+        {
+          "name": "Get My Listings",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{firebase_token}}" } ],
+            "url": { "raw": "{{baseUrl}}/api/listings/mine", "host": ["{{baseUrl}}"], "path": ["api", "listings", "mine"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{firebase_token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n    \"listing_id\": \"LISTING_ID\",\n    \"quantity\": 100\n}" },
+            "url": { "raw": "{{baseUrl}}/api/orders", "host": ["{{baseUrl}}"], "path": ["api", "orders"] }
+          }
+        },
+        {
+          "name": "Get My Orders",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{firebase_token}}" } ],
+            "url": { "raw": "{{baseUrl}}/api/orders/mine", "host": ["{{baseUrl}}"], "path": ["api", "orders", "mine"] }
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PATCH",
+            "header": [ { "key": "Authorization", "value": "Bearer {{firebase_token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n    \"status\": \"delivered\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/orders/:id/status", "host": ["{{baseUrl}}"], "path": ["api", "orders", ":id", "status"], "variable": [{ "key": "id", "value": "ORDER_ID" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Group Buys",
+      "item": [
+        {
+          "name": "Search Group Buys",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{firebase_token}}" } ],
+            "url": { "raw": "{{baseUrl}}/api/group-buys?material=steel&lat=40.7128&lng=-74.0060", "host": ["{{baseUrl}}"], "path": ["api", "group-buys"], "query": [{ "key": "material", "value": "steel" }, { "key": "lat", "value": "40.7128" }, { "key": "lng", "value": "-74.0060" }] }
+          }
+        },
+        {
+          "name": "Join Group Buy",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{firebase_token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n    \"quantity\": 500\n}" },
+            "url": { "raw": "{{baseUrl}}/api/group-buys/:id/join", "host": ["{{baseUrl}}"], "path": ["api", "group-buys", ":id", "join"], "variable": [{ "key": "id", "value": "GROUP_BUY_ID" }] }
+          }
+        },
+        {
+          "name": "Match Group Buy (Internal)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n    \"material_name\": \"Cement\",\n    \"target_qty\": 5000,\n    \"unlock_price\": 8.50,\n    \"supplier_id\": null\n}" },
+            "url": { "raw": "{{baseUrl}}/api/group-buys/match", "host": ["{{baseUrl}}"], "path": ["api", "group-buys", "match"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Forecasts",
+      "item": [
+        {
+          "name": "Get My Forecasts",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{firebase_token}}" } ],
+            "url": { "raw": "{{baseUrl}}/api/forecasts/mine", "host": ["{{baseUrl}}"], "path": ["api", "forecasts", "mine"] }
+          }
+        },
+        {
+          "name": "Run Forecast (Internal)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n    \"buyer_id\": \"BUYER_ID\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/forecasts/run", "host": ["{{baseUrl}}"], "path": ["api", "forecasts", "run"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pricing",
+      "item": [
+        {
+          "name": "Check Pricing (Internal)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n    \"listing_id\": \"LISTING_ID\",\n    \"is_flagged_high\": true,\n    \"fair_price_min\": 1.0,\n    \"fair_price_max\": 2.0\n}" },
+            "url": { "raw": "{{baseUrl}}/api/pricing/check", "host": ["{{baseUrl}}"], "path": ["api", "pricing", "check"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Trust & Reviews",
+      "item": [
+        {
+          "name": "Get Trust Score",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{firebase_token}}" } ],
+            "url": { "raw": "{{baseUrl}}/api/trust/:supplierId", "host": ["{{baseUrl}}"], "path": ["api", "trust", ":supplierId"], "variable": [{ "key": "supplierId", "value": "SUPPLIER_ID" }] }
+          }
+        },
+        {
+          "name": "Recompute Trust (Internal)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n    \"supplierId\": \"SUPPLIER_ID\",\n    \"new_score\": 85.50\n}" },
+            "url": { "raw": "{{baseUrl}}/api/trust/recompute", "host": ["{{baseUrl}}"], "path": ["api", "trust", "recompute"] }
+          }
+        },
+        {
+          "name": "Submit Review",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Authorization", "value": "Bearer {{firebase_token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n    \"order_id\": \"ORDER_ID\",\n    \"rating\": 5,\n    \"comment\": \"Excellent service\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/reviews", "host": ["{{baseUrl}}"], "path": ["api", "reviews"] }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000"
+    },
+    {
+      "key": "firebase_token",
+      "value": "YOUR_TOKEN_HERE"
+    }
+  ]
+}

@@ -1,0 +1,205 @@
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgvector]
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+enum UserRole {
+  buyer
+  supplier
+
+  @@map("user_role")
+}
+
+enum BusinessType {
+  retail_shop
+  manufacturer
+  distributor
+
+  @@map("business_type")
+}
+
+enum OrderStatus {
+  pending
+  confirmed
+  in_transit
+  delivered
+  cancelled
+
+  @@map("order_status")
+}
+
+enum GroupBuyStatus {
+  open
+  locked
+  fulfilled
+  expired
+
+  @@map("group_buy_status")
+}
+
+enum VerificationStatus {
+  unverified
+  pending
+  verified
+  rejected
+
+  @@map("verification_status")
+}
+
+model User {
+  id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firebaseUid        String             @unique @map("firebase_uid")
+  email              String             @unique
+  displayName        String             @map("display_name")
+  photoUrl           String?            @map("photo_url")
+  role               UserRole
+  businessType       BusinessType?      @map("business_type")
+  businessName       String?            @map("business_name")
+  phone              String?
+  latitude           Float?
+  longitude          Float?
+  addressText        String?            @map("address_text")
+  verificationStatus VerificationStatus @default(unverified) @map("verification_status")
+  trustScore         Decimal            @default(50.00) @map("trust_score") @db.Decimal(4, 2)
+  createdAt          DateTime           @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime           @default(now()) @map("updated_at") @db.Timestamptz
+
+  listings            Listing[]             @relation("SupplierListings")
+  buyerOrders         Order[]               @relation("BuyerOrders")
+  supplierOrders      Order[]               @relation("SupplierOrders")
+  groupBuys           GroupBuy[]            @relation("SupplierGroupBuys")
+  groupBuyParticipants GroupBuyParticipant[]
+  forecasts           Forecast[]
+  trustEvents         TrustEvent[]          @relation("SupplierTrustEvents")
+  buyerReviews        Review[]              @relation("BuyerReviews")
+  supplierReviews     Review[]              @relation("SupplierReviews")
+
+  @@map("users")
+}
+
+model Listing {
+  id            String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  supplierId    String                      @map("supplier_id") @db.Uuid
+  materialName  String                      @map("material_name")
+  category      String?
+  stockQty      Decimal                     @map("stock_qty") @db.Decimal(12, 2)
+  unit          String
+  pricePerUnit  Decimal                     @map("price_per_unit") @db.Decimal(12, 2)
+  fairPriceMin  Decimal?                    @map("fair_price_min") @db.Decimal(12, 2)
+  fairPriceMax  Decimal?                    @map("fair_price_max") @db.Decimal(12, 2)
+  isFlaggedHigh Boolean                     @default(false) @map("is_flagged_high")
+  embedding     Unsupported("vector(768)")?
+  updatedAt     DateTime                    @default(now()) @map("updated_at") @db.Timestamptz
+  createdAt     DateTime                    @default(now()) @map("created_at") @db.Timestamptz
+
+  supplier User    @relation("SupplierListings", fields: [supplierId], references: [id], onDelete: Cascade)
+  orders   Order[]
+
+  @@map("listings")
+}
+
+model Order {
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  buyerId     String      @map("buyer_id") @db.Uuid
+  supplierId  String      @map("supplier_id") @db.Uuid
+  listingId   String      @map("listing_id") @db.Uuid
+  quantity    Decimal     @db.Decimal(12, 2)
+  totalPrice  Decimal     @map("total_price") @db.Decimal(12, 2)
+  status      OrderStatus @default(pending)
+  groupBuyId  String?     @map("group_buy_id") @db.Uuid
+  deliveryEta DateTime?   @map("delivery_eta") @db.Timestamptz
+  deliveredAt DateTime?   @map("delivered_at") @db.Timestamptz
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz
+
+  buyer       User        @relation("BuyerOrders", fields: [buyerId], references: [id])
+  supplier    User        @relation("SupplierOrders", fields: [supplierId], references: [id])
+  listing     Listing     @relation(fields: [listingId], references: [id])
+  groupBuy    GroupBuy?   @relation(fields: [groupBuyId], references: [id])
+  trustEvents TrustEvent[]
+  reviews     Review[]
+
+  @@map("orders")
+}
+
+model GroupBuy {
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  materialName String         @map("material_name")
+  supplierId   String?        @map("supplier_id") @db.Uuid
+  targetQty    Decimal        @map("target_qty") @db.Decimal(12, 2)
+  currentQty   Decimal        @default(0) @map("current_qty") @db.Decimal(12, 2)
+  unlockPrice  Decimal?       @map("unlock_price") @db.Decimal(12, 2)
+  status       GroupBuyStatus @default(open)
+  expiresAt    DateTime?      @map("expires_at") @db.Timestamptz
+  createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamptz
+
+  supplier     User?                 @relation("SupplierGroupBuys", fields: [supplierId], references: [id])
+  orders       Order[]
+  participants GroupBuyParticipant[]
+
+  @@map("group_buys")
+}
+
+model GroupBuyParticipant {
+  groupBuyId String   @map("group_buy_id") @db.Uuid
+  buyerId    String   @map("buyer_id") @db.Uuid
+  quantity   Decimal  @db.Decimal(12, 2)
+  joinedAt   DateTime @default(now()) @map("joined_at") @db.Timestamptz
+
+  groupBuy GroupBuy @relation(fields: [groupBuyId], references: [id], onDelete: Cascade)
+  buyer    User     @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+
+  @@id([groupBuyId, buyerId])
+  @@map("group_buy_participants")
+}
+
+model Forecast {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  buyerId           String   @map("buyer_id") @db.Uuid
+  materialName      String   @map("material_name")
+  predictedQty      Decimal? @map("predicted_qty") @db.Decimal(12, 2)
+  predictedNeedDate DateTime @map("predicted_need_date") @db.Timestamptz
+  confidence        Decimal  @map("confidence") @db.Decimal(4, 2)
+  reasoning         String
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  buyer User @relation(fields: [buyerId], references: [id])
+
+  @@map("forecasts")
+}
+
+model TrustEvent {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  supplierId String   @map("supplier_id") @db.Uuid
+  orderId    String?  @map("order_id") @db.Uuid
+  eventType  String   @map("event_type")
+  scoreDelta Decimal  @map("score_delta") @db.Decimal(4, 2)
+  note       String?
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  supplier User   @relation("SupplierTrustEvents", fields: [supplierId], references: [id])
+  order    Order? @relation(fields: [orderId], references: [id])
+
+  @@map("trust_events")
+}
+
+model Review {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId    String   @map("order_id") @db.Uuid
+  buyerId    String   @map("buyer_id") @db.Uuid
+  supplierId String   @map("supplier_id") @db.Uuid
+  rating     Int      @db.SmallInt
+  comment    String?
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  order    Order  @relation(fields: [orderId], references: [id])
+  buyer    User   @relation("BuyerReviews", fields: [buyerId], references: [id])
+  supplier User   @relation("SupplierReviews", fields: [supplierId], references: [id])
+
+  @@map("reviews")
+}

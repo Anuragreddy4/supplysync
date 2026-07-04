@@ -1,0 +1,184 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [vector]
+}
+
+enum user_role {
+  buyer
+  supplier
+}
+
+enum business_type {
+  retail_shop
+  manufacturer
+  distributor
+}
+
+enum order_status {
+  pending
+  confirmed
+  in_transit
+  delivered
+  cancelled
+}
+
+enum group_buy_status {
+  open
+  locked
+  fulfilled
+  expired
+}
+
+enum verification_status {
+  unverified
+  pending
+  verified
+  rejected
+}
+
+model users {
+  id                  String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firebase_uid        String               @unique
+  email               String               @unique
+  display_name        String
+  photo_url           String?
+  role                user_role?
+  business_type       business_type?
+  business_name       String?
+  phone               String?
+  latitude            Float?               @db.DoublePrecision
+  longitude           Float?               @db.DoublePrecision
+  address_text        String?
+  verification_status verification_status? @default(unverified)
+  trust_score         Decimal?             @default(50.00) @db.Decimal(4, 2)
+  created_at          DateTime?            @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime?            @default(now()) @db.Timestamptz(6)
+  listings            listings[]
+  orders_buyer        orders[]             @relation("BuyerOrders")
+  orders_supplier     orders[]             @relation("SupplierOrders")
+  group_buys          group_buys[]
+  group_buy_participants group_buy_participants[]
+  forecasts           forecasts[]
+  trust_events        trust_events[]
+  reviews_buyer       reviews[]            @relation("BuyerReviews")
+  reviews_supplier    reviews[]            @relation("SupplierReviews")
+
+  @@index([latitude, longitude], map: "idx_users_geo")
+}
+
+model listings {
+  id               String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  supplier_id      String                 @db.Uuid
+  material_name    String
+  category         String?
+  stock_qty        Decimal                @db.Decimal(12, 2)
+  unit             String
+  price_per_unit   Decimal                @db.Decimal(12, 2)
+  fair_price_min   Decimal?               @db.Decimal(12, 2)
+  fair_price_max   Decimal?               @db.Decimal(12, 2)
+  is_flagged_high  Boolean?               @default(false)
+  // We use Unsupported("vector(768)") to map pgvector properly in Prisma
+  embedding        Unsupported("vector(768)")?
+  updated_at       DateTime?              @default(now()) @db.Timestamptz(6)
+  created_at       DateTime?              @default(now()) @db.Timestamptz(6)
+  users            users                  @relation(fields: [supplier_id], references: [id], onDelete: Cascade)
+  orders           orders[]
+
+  @@index([material_name], map: "idx_listings_material")
+  // Note: pgvector index creation might need to be manual or specific to Prisma version, 
+  // but we can add the RAW SQL for it in the init script or leave it to Prisma if supported.
+  // @@index([embedding], type: Ivfflat, map: "idx_listings_embedding")
+}
+
+model orders {
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  buyer_id     String       @db.Uuid
+  supplier_id  String       @db.Uuid
+  listing_id   String       @db.Uuid
+  quantity     Decimal      @db.Decimal(12, 2)
+  total_price  Decimal      @db.Decimal(12, 2)
+  status       order_status @default(pending)
+  group_buy_id String?      @db.Uuid
+  delivery_eta DateTime?    @db.Timestamptz(6)
+  delivered_at DateTime?    @db.Timestamptz(6)
+  created_at   DateTime?    @default(now()) @db.Timestamptz(6)
+  users_buyer  users        @relation("BuyerOrders", fields: [buyer_id], references: [id])
+  users_supplier users      @relation("SupplierOrders", fields: [supplier_id], references: [id])
+  listings     listings     @relation(fields: [listing_id], references: [id])
+  group_buys   group_buys?  @relation(fields: [group_buy_id], references: [id])
+  trust_events trust_events[]
+  reviews      reviews[]
+
+  @@index([buyer_id], map: "idx_orders_buyer")
+  @@index([supplier_id], map: "idx_orders_supplier")
+}
+
+model group_buys {
+  id            String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  material_name String
+  supplier_id   String?            @db.Uuid
+  target_qty    Decimal            @db.Decimal(12, 2)
+  current_qty   Decimal?           @default(0) @db.Decimal(12, 2)
+  unlock_price  Decimal?           @db.Decimal(12, 2)
+  status        group_buy_status?  @default(open)
+  expires_at    DateTime?          @db.Timestamptz(6)
+  created_at    DateTime?          @default(now()) @db.Timestamptz(6)
+  users         users?             @relation(fields: [supplier_id], references: [id])
+  orders        orders[]
+  participants  group_buy_participants[]
+}
+
+model group_buy_participants {
+  group_buy_id String    @db.Uuid
+  buyer_id     String    @db.Uuid
+  quantity     Decimal   @db.Decimal(12, 2)
+  joined_at    DateTime? @default(now()) @db.Timestamptz(6)
+  group_buys   group_buys @relation(fields: [group_buy_id], references: [id], onDelete: Cascade)
+  users        users      @relation(fields: [buyer_id], references: [id], onDelete: Cascade)
+
+  @@id([group_buy_id, buyer_id])
+}
+
+model forecasts {
+  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  buyer_id            String    @db.Uuid
+  material_name       String
+  predicted_qty       Decimal?  @db.Decimal(12, 2)
+  predicted_need_date DateTime? @db.Timestamptz(6)
+  confidence          Decimal?  @db.Decimal(4, 2)
+  reasoning           String?
+  created_at          DateTime? @default(now()) @db.Timestamptz(6)
+  users               users     @relation(fields: [buyer_id], references: [id])
+}
+
+model trust_events {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  supplier_id  String    @db.Uuid
+  order_id     String?   @db.Uuid
+  event_type   String
+  score_delta  Decimal   @db.Decimal(4, 2)
+  note         String?
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  users        users     @relation(fields: [supplier_id], references: [id])
+  orders       orders?   @relation(fields: [order_id], references: [id])
+}
+
+model reviews {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  order_id    String    @db.Uuid
+  buyer_id    String    @db.Uuid
+  supplier_id String    @db.Uuid
+  rating      Int       @db.SmallInt
+  comment     String?
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  orders      orders    @relation(fields: [order_id], references: [id])
+  users_buyer users     @relation("BuyerReviews", fields: [buyer_id], references: [id])
+  users_supplier users  @relation("SupplierReviews", fields: [supplier_id], references: [id])
+}

@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme base */
+    --background: 0 0% 97.6%;
+    --foreground: 224 71.4% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71.4% 4.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71.4% 4.1%;
+    --primary: 168 76% 36%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 168 76% 36%;
+    --radius: 0.625rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-surface-base text-body font-sans antialiased;
+  }
+}
+
+@layer components {
+  /* Elevated Card */
+  .elevated-card {
+    @apply bg-white rounded-2xl shadow-card;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .elevated-card:hover {
+    @apply shadow-card-hover;
+  }
+
+  /* Bottom Navigation Dock */
+  .bottom-dock {
+    @apply fixed bottom-4 left-1/2 -translate-x-1/2 bg-white rounded-full shadow-dock px-2 py-2 z-50;
+    min-width: 420px;
+    max-width: 580px;
+    width: 90%;
+  }
+
+  /* Status Pills */
+  .status-pill {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold capitalize;
+  }
+  .status-pill--pending {
+    @apply bg-status-pending-bg text-status-pending;
+  }
+  .status-pill--confirmed {
+    @apply bg-status-confirmed-bg text-status-confirmed;
+  }
+  .status-pill--in_transit {
+    @apply bg-status-in_transit-bg text-status-in_transit;
+  }
+  .status-pill--delivered {
+    @apply bg-status-delivered-bg text-status-delivered;
+  }
+  .status-pill--cancelled {
+    @apply bg-status-cancelled-bg text-status-cancelled;
+  }
+
+  /* Price Tag */
+  .price-tag {
+    @apply font-semibold tabular-nums tracking-tight;
+  }
+
+  /* Primary Button - Buyer (emerald) */
+  .btn-primary-buyer {
+    @apply bg-buyer text-white font-semibold rounded-xl px-6 py-3 shadow-btn transition-all duration-200;
+  }
+  .btn-primary-buyer:hover {
+    @apply bg-buyer-hover shadow-btn-hover;
+    transform: translateY(-1px);
+  }
+  .btn-primary-buyer:active {
+    transform: scale(0.97);
+  }
+
+  /* Primary Button - Supplier (indigo) */
+  .btn-primary-supplier {
+    @apply bg-supplier text-white font-semibold rounded-xl px-6 py-3 shadow-btn transition-all duration-200;
+  }
+  .btn-primary-supplier:hover {
+    @apply bg-supplier-hover shadow-btn-hover;
+    transform: translateY(-1px);
+  }
+  .btn-primary-supplier:active {
+    transform: scale(0.97);
+  }
+
+  /* Outline / Secondary Button */
+  .btn-outline {
+    @apply border-2 font-semibold rounded-xl px-6 py-3 bg-transparent transition-all duration-200;
+  }
+
+  /* Floating Search Bar */
+  .search-bar {
+    @apply bg-white rounded-xl shadow-card px-4 py-3 flex items-center gap-3 border border-gray-100;
+  }
+  .search-bar input {
+    @apply bg-transparent outline-none flex-1 text-body placeholder:text-subtle;
+  }
+
+  /* Skeleton loader */
+  .skeleton {
+    @apply bg-gray-200 rounded-xl animate-pulse;
+  }
+}
+
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom Scrollbar - Light */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}
