@@ -111,13 +111,16 @@
     @apply shadow-card-hover;
   }
 
-  /* Bottom Navigation Dock */
+  /* Bottom Navigation Dock - macOS Glassmorphism Style */
   .bottom-dock {
-    @apply fixed bottom-4 left-1/2 -translate-x-1/2 bg-white rounded-full shadow-dock px-2 py-2 z-50 dark:border dark:border-slate-700;
+    @apply fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-2 py-2 rounded-full;
+    @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl backdrop-saturate-150;
+    @apply border border-white/50 dark:border-slate-700/50;
+    @apply shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)];
     min-width: 420px;
     max-width: 580px;
     width: 90%;
-    transition: background-color 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   /* Status Pills */
