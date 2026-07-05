@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useState, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers";
 import { Bell } from "lucide-react";
 import { signOut } from "@/lib/firebase-client";
@@ -63,6 +63,8 @@ export default function TopBar({ showSearch, onSearchClick }: TopBarProps) {
                     await signOut();
                     // Optional backend logout call
                     await apiFetch('/auth/logout', { method: 'POST' });
+                    // Redirect to login page
+                    router.push('/login');
                   } catch (e) {
                     console.error('Logout failed', e);
                   }
