@@ -111,14 +111,15 @@
     @apply shadow-card-hover;
   }
 
-  /* Bottom Navigation Dock - macOS Glassmorphism Style */
+  /* Bottom Navigation Dock - Liquid Glass macOS Style */
   .bottom-dock {
     @apply fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-2 py-2 rounded-full;
-    @apply dark:bg-slate-900/70 backdrop-blur-xl backdrop-saturate-150;
+    @apply dark:bg-slate-900/40 backdrop-blur-2xl backdrop-saturate-[2];
     @apply dark:border-slate-700/50;
-    @apply shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)];
-    background-color: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    @apply shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)];
+    background-color: rgba(255, 255, 255, 0.25); /* Ultra transparent for true glass */
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.6);
     min-width: 420px;
     max-width: 580px;
     width: 90%;

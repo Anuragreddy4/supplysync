@@ -28,7 +28,7 @@ export default function TopBar({ showSearch, onSearchClick }: TopBarProps) {
     : "/buyer/dashboard";
 
   return (
-    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-100" id="top-bar">
+    <header className="sticky top-0 z-40 bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl backdrop-saturate-[1.8] border-b border-white/20 dark:border-slate-700/50 shadow-sm" id="top-bar">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-16">
         {/* Logo */}
         <Link href={dashboardHref} className="flex items-center gap-2.5">
