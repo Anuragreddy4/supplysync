@@ -58,9 +58,9 @@ export default function TopBar({ showSearch, onSearchClick }: TopBarProps) {
           </button>
           {/* Dropdown menu */}
           {profileOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-100" id="profile-menu">
+            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg border border-gray-100 dark:border-slate-700" id="profile-menu">
               <button
-                className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2"
+                className="w-full text-left px-4 py-2 text-sm text-heading hover:bg-gray-100 dark:hover:bg-slate-700 flex items-center gap-2"
                 onClick={async () => {
                   try {
                     await signOut();

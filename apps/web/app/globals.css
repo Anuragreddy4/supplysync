@@ -46,11 +46,26 @@
   }
 
   .dark {
-    /* Standard background/foreground */
+    /* Standard background/foreground (dark) */
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    --card: 217 33% 17%;
+    --card-foreground: 210 40% 98%;
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 168 76% 36%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 215 28% 20%;
+    --input: 215 28% 20%;
+    --ring: 168 76% 36%;
 
     /* Custom Theme Variables (Dark) */
     --color-surface: #1e293b;
@@ -58,16 +73,16 @@
     --color-surface-elevated: #1e293b;
     --color-surface-muted: #334155;
     
-    --color-heading: #f8fafc;
+    --color-heading: #f1f5f9;
     --color-body: #cbd5e1;
     --color-muted: #94a3b8;
     --color-subtle: #64748b;
     
     --color-white: #1e293b;
     --color-gray-50: #0f172a;
-    --color-gray-100: #334155;
-    --color-gray-200: #475569;
-    --color-gray-300: #64748b;
+    --color-gray-100: #1e293b;
+    --color-gray-200: #334155;
+    --color-gray-300: #475569;
     --color-gray-400: #94a3b8;
   }
 
@@ -179,7 +194,7 @@
   }
 }
 
-/* Custom Scrollbar - Light */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -193,10 +208,15 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #9CA3AF;
 }
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
 
 /* ────────────────────────────────────────────────
    INTRO ANIMATION OVERLAY  (video-based)
-   APPEND THIS BLOCK TO THE END OF globals.css
    ──────────────────────────────────────────────── */
 .intro-overlay {
   position: fixed;

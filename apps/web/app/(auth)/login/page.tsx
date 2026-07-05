@@ -204,9 +204,9 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-surface-base flex" id="login-page">
       {/* Left Panel — Gradient + Branding */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 items-center justify-center">
-        <div className="absolute -top-20 -left-20 w-[500px] h-[500px] bg-gradient-to-br from-buyer/40 via-teal-300/50 to-cyan-300/40 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 right-10 w-72 h-72 bg-gradient-to-br from-blue-400/30 to-indigo-400/20 rounded-full blur-2xl" />
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 items-center justify-center">
+        <div className="absolute -top-20 -left-20 w-[500px] h-[500px] bg-gradient-to-br from-buyer/40 via-teal-300/50 to-cyan-300/40 dark:from-buyer/20 dark:via-teal-700/30 dark:to-cyan-700/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-72 h-72 bg-gradient-to-br from-blue-400/30 to-indigo-400/20 dark:from-blue-600/15 dark:to-indigo-600/10 rounded-full blur-2xl" />
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
