@@ -42,4 +42,11 @@ router.post('/session', requireAuth, async (req: Request, res: Response): Promis
   }
 });
 
+router.post('/logout', async (req: Request, res: Response) => {
+  // If using cookies for session, clear them here. Currently, Firebase auth is client‑side.
+  // Respond with success so frontend can clear local state.
+  res.json({ success: true, data: null, message: 'Logged out' });
+});
+
+// Existing export
 export default router;
