@@ -25,10 +25,19 @@ const config = {
       colors: {
         /* Base surfaces */
         surface: {
-          DEFAULT: "#FFFFFF",
-          base: "#F7F8FA",
-          elevated: "#FFFFFF",
-          muted: "#F1F3F5",
+          DEFAULT: "var(--color-surface)",
+          base: "var(--color-surface-base)",
+          elevated: "var(--color-surface-elevated)",
+          muted: "var(--color-surface-muted)",
+        },
+        /* Overrides for standard Tailwind colors to support global dark mode */
+        white: "var(--color-white)",
+        gray: {
+          50: "var(--color-gray-50)",
+          100: "var(--color-gray-100)",
+          200: "var(--color-gray-200)",
+          300: "var(--color-gray-300)",
+          400: "var(--color-gray-400)",
         },
         /* Buyer accent: emerald/teal */
         buyer: {
@@ -60,10 +69,10 @@ const config = {
           "cancelled-bg": "rgba(239, 68, 68, 0.10)",
         },
         /* Text hierarchy */
-        heading: "#111827",
-        body: "#374151",
-        muted: "#6B7280",
-        subtle: "#9CA3AF",
+        heading: "var(--color-heading)",
+        body: "var(--color-body)",
+        muted: "var(--color-muted)",
+        subtle: "var(--color-subtle)",
         /* shadcn compatibility */
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

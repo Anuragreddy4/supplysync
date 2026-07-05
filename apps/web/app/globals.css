@@ -25,6 +25,50 @@
     --input: 220 13% 91%;
     --ring: 168 76% 36%;
     --radius: 0.625rem;
+
+    /* Custom Theme Variables (Light) */
+    --color-surface: #FFFFFF;
+    --color-surface-base: #F7F8FA;
+    --color-surface-elevated: #FFFFFF;
+    --color-surface-muted: #F1F3F5;
+    
+    --color-heading: #111827;
+    --color-body: #374151;
+    --color-muted: #6B7280;
+    --color-subtle: #9CA3AF;
+    
+    --color-white: #FFFFFF;
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-400: #9ca3af;
+  }
+
+  .dark {
+    /* Standard background/foreground */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    /* Custom Theme Variables (Dark) */
+    --color-surface: #1e293b;
+    --color-surface-base: #0f172a;
+    --color-surface-elevated: #1e293b;
+    --color-surface-muted: #334155;
+    
+    --color-heading: #f8fafc;
+    --color-body: #cbd5e1;
+    --color-muted: #94a3b8;
+    --color-subtle: #64748b;
+    
+    --color-white: #1e293b;
+    --color-gray-50: #0f172a;
+    --color-gray-100: #334155;
+    --color-gray-200: #475569;
+    --color-gray-300: #64748b;
+    --color-gray-400: #94a3b8;
   }
 
   * {
@@ -45,8 +89,8 @@
 @layer components {
   /* Elevated Card */
   .elevated-card {
-    @apply bg-white rounded-2xl shadow-card;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    @apply bg-white rounded-2xl shadow-card dark:shadow-none dark:border dark:border-slate-700;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
   }
   .elevated-card:hover {
     @apply shadow-card-hover;
@@ -54,10 +98,11 @@
 
   /* Bottom Navigation Dock */
   .bottom-dock {
-    @apply fixed bottom-4 left-1/2 -translate-x-1/2 bg-white rounded-full shadow-dock px-2 py-2 z-50;
+    @apply fixed bottom-4 left-1/2 -translate-x-1/2 bg-white rounded-full shadow-dock px-2 py-2 z-50 dark:border dark:border-slate-700;
     min-width: 420px;
     max-width: 580px;
     width: 90%;
+    transition: background-color 0.2s ease;
   }
 
   /* Status Pills */
