@@ -6,8 +6,9 @@ import { formatINR } from "@/lib/format";
 import ElevatedCard from "@/components/shared/ElevatedCard";
 import StatusPill from "@/components/shared/StatusPill";
 import { motion } from "framer-motion";
-import { ArrowLeft, Package, CheckCircle2, Truck, Clock, XCircle } from "lucide-react";
+import { ArrowLeft, Package, CheckCircle2, Truck, Clock, XCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { fetchApi } from "@/lib/api-client";
 
 const statusSteps = [
   { key: "pending", label: "Pending", icon: Clock, description: "Order placed, awaiting confirmation" },
@@ -18,31 +19,62 @@ const statusSteps = [
 
 type OrderStatus = "pending" | "confirmed" | "in_transit" | "delivered" | "cancelled";
 
-// Demo order data
-const demoOrder: {
-  id: string;
-  material_name: string;
-  supplier_name: string;
-  quantity: number;
-  unit: string;
-  total_price: number;
-  status: OrderStatus;
-  created_at: string;
-} = {
-  id: "ord-001",
-  material_name: "Portland Cement (OPC 53)",
-  supplier_name: "Shree Industries",
-  quantity: 50,
-  unit: "bags",
-  total_price: 18500,
-  status: "in_transit" as const,
-  created_at: "2026-07-02T10:00:00Z",
-};
-
 export default function OrderTrackingPage() {
   const params = useParams();
   const router = useRouter();
-  const [order, setOrder] = useState(demoOrder);
+  const [order, setOrder] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const data = await fetchApi(`/orders/${params.id}`);
+        
+        // Map backend schema to UI format
+        setOrder({
+          id: data.id,
+          material_name: data.listings?.material_name || "Unknown Material",
+          supplier_name: data.users_supplier?.business_name || data.users_supplier?.display_name || "Unknown Supplier",
+          quantity: data.quantity,
+          unit: data.listings?.unit || "units",
+          total_price: data.total_price,
+          status: data.status as OrderStatus,
+          created_at: data.created_at,
+        });
+      } catch (err) {
+        console.error("Failed to fetch order tracking:", err);
+        setError("Failed to load order tracking details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    if (params.id) {
+      fetchOrder();
+    }
+  }, [params.id]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-buyer" />
+      </div>
+    );
+  }
+
+  if (error || !order) {
+    return (
+      <div className="max-w-2xl mx-auto text-center py-20">
+        <h2 className="text-xl font-bold text-heading mb-2">Order Not Found</h2>
+        <p className="text-muted mb-6">{error || "Could not find the tracking details for this order."}</p>
+        <Link href="/buyer/dashboard" className="text-buyer font-medium hover:underline">
+          Return to Dashboard
+        </Link>
+      </div>
+    );
+  }
+
   const currentStepIndex = statusSteps.findIndex(s => s.key === order.status);
   const isCancelled = order.status === "cancelled";
 

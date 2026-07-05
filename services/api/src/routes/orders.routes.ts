@@ -41,6 +41,51 @@ router.get('/mine', requireAuth, async (req: Request, res: Response) => {
   }
 });
 
+// GET /api/orders/:id
+router.get('/:id', requireAuth, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const dbUser = await prisma.users.findUnique({
+      where: { firebase_uid: req.firebaseUser!.uid },
+    });
+    
+    if (!dbUser) {
+      res.status(404).json(errorResponse('NOT_FOUND', 'User not found'));
+      return;
+    }
+    
+    const order = await prisma.orders.findUnique({
+      where: { id },
+      include: {
+        listings: {
+          select: {
+            material_name: true,
+            category: true,
+            unit: true,
+          }
+        },
+        users_buyer: { select: { display_name: true, business_name: true, phone: true } },
+        users_supplier: { select: { display_name: true, business_name: true, phone: true } },
+      }
+    });
+    
+    if (!order) {
+      res.status(404).json(errorResponse('NOT_FOUND', 'Order not found'));
+      return;
+    }
+    
+    // Ensure the user is either the buyer or supplier of this order
+    if (order.buyer_id !== dbUser.id && order.supplier_id !== dbUser.id) {
+      res.status(403).json(errorResponse('FORBIDDEN', 'You do not have permission to view this order'));
+      return;
+    }
+    
+    res.json(successResponse(order));
+  } catch (error) {
+    res.status(500).json(errorResponse('INTERNAL_SERVER_ERROR', 'Failed to fetch order details'));
+  }
+});
+
 // POST /api/orders
 router.post('/', requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
