@@ -1,4 +1,5 @@
 import { auth } from './firebase-client';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://supplysync-uizo.onrender.com/api' : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api');
 
@@ -11,11 +12,30 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * Wait for Firebase auth to finish restoring the session.
+ * Returns the current user (or null if not logged in).
+ */
+function waitForAuth(): Promise<import('firebase/auth').User | null> {
+  return new Promise((resolve) => {
+    if (auth.currentUser) {
+      resolve(auth.currentUser);
+      return;
+    }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      unsubscribe();
+      resolve(user);
+    });
+    // Safety timeout so we never hang forever
+    setTimeout(() => resolve(null), 5000);
+  });
+}
+
 export async function fetchApi<T = any>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
-  const user = auth.currentUser;
+  const user = await waitForAuth();
   const headers = new Headers(options.headers);
   headers.set('Content-Type', 'application/json');
 
@@ -47,7 +67,7 @@ export async function fetchApi<T = any>(
 }
 
 export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const user = auth.currentUser;
+  const user = await waitForAuth();
   const token = user ? await user.getIdToken() : null;
   const baseUrl = process.env.NODE_ENV === 'production' ? 'https://supplysync-uizo.onrender.com/api' : (process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api');
 
