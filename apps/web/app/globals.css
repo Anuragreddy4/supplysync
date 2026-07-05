@@ -114,9 +114,11 @@
   /* Bottom Navigation Dock - macOS Glassmorphism Style */
   .bottom-dock {
     @apply fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-2 py-2 rounded-full;
-    @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl backdrop-saturate-150;
-    @apply border border-white/50 dark:border-slate-700/50;
+    @apply dark:bg-slate-900/70 backdrop-blur-xl backdrop-saturate-150;
+    @apply dark:border-slate-700/50;
     @apply shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)];
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     min-width: 420px;
     max-width: 580px;
     width: 90%;
