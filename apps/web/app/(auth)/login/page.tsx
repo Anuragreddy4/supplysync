@@ -62,7 +62,8 @@ export default function LoginPage() {
       await handlePostAuth();
     } catch (err: any) {
       if (err?.code !== "auth/popup-closed-by-user") {
-        setError("Google sign in failed. Please try again.");
+        console.error("Google Auth Error:", err);
+        setError(`Google sign in failed: ${err.message || err.code || "Unknown error"}`);
       }
       setIsSigningIn(false);
     }
