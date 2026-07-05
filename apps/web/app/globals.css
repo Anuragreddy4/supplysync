@@ -233,19 +233,23 @@
 /* ==========================================================================
    Google Translate Seamless Override
    ========================================================================== */
+.goog-te-banner-frame,
 .goog-te-banner-frame.skiptranslate, 
-.goog-te-gadget-icon {
+.goog-te-gadget-icon,
+.goog-te-gadget-simple,
+#goog-gt-tt,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-ZVi9od-aZ2wEe-OiiCO {
   display: none !important;
 }
 
-body {
+html, body {
   top: 0px !important; 
+  position: static !important;
 }
 
-.goog-tooltip {
-  display: none !important;
-}
-.goog-tooltip:hover {
+.goog-tooltip, .goog-tooltip:hover {
   display: none !important;
 }
 .goog-text-highlight {
