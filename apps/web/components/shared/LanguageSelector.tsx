@@ -42,7 +42,7 @@ export function LanguageSelector() {
   };
 
   return (
-    <div className="relative z-50">
+    <div className="relative z-50 notranslate">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-1.5 p-1.5 md:px-3 md:py-2 rounded-full md:rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors text-sm font-medium text-heading focus:outline-none"
