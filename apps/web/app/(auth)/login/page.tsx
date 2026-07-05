@@ -214,7 +214,8 @@ export default function LoginPage() {
           transition={{ duration: 0.6 }}
           className="relative z-10 text-center px-12"
         >
-          <img src="/logo.png" alt="SupplySync Logo" className="w-20 h-20 mx-auto object-contain mb-6 drop-shadow-lg" />
+          <img src="/logo.png" alt="SupplySync Logo" className="w-20 h-20 mx-auto object-contain mb-6 drop-shadow-lg dark:hidden" />
+          <img src="/logo-dark.png" alt="SupplySync Logo" className="w-20 h-20 mx-auto object-contain mb-6 drop-shadow-lg hidden dark:block" />
           <h2 className="font-jakarta font-bold text-heading text-3xl mb-3">Supply Sync</h2>
           <p className="text-muted text-lg">Smarter sourcing, simplified.</p>
         </motion.div>

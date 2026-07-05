@@ -11,7 +11,8 @@ export default function Footer() {
           {/* Brand + Subscribe */}
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <img src="/logo.png" alt="SupplySync Logo" className="w-8 h-8 object-contain" />
+              <img src="/logo.png" alt="SupplySync Logo" className="w-8 h-8 object-contain dark:hidden" />
+              <img src="/logo-dark.png" alt="SupplySync Logo" className="w-8 h-8 object-contain hidden dark:block" />
               <span className="font-jakarta font-bold text-heading text-lg tracking-tight">
                 Supply Sync
               </span>

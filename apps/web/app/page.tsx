@@ -12,7 +12,8 @@ export default function LandingPage() {
       <nav className="fixed top-0 inset-x-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-16">
           <Link href="/" className="flex items-center gap-2.5">
-            <img src="/logo.png" alt="SupplySync Logo" className="w-8 h-8 object-contain" />
+            <img src="/logo.png" alt="SupplySync Logo" className="w-8 h-8 object-contain dark:hidden" />
+            <img src="/logo-dark.png" alt="SupplySync Logo" className="w-8 h-8 object-contain hidden dark:block" />
             <span className="font-jakarta font-bold text-heading text-lg tracking-tight">
               Supply Sync
             </span>
@@ -68,7 +69,8 @@ export default function LandingPage() {
               <div className="relative z-10 flex items-center justify-center h-full">
                 <div className="w-40 h-40 lg:w-52 lg:h-52 bg-white rounded-3xl shadow-card flex items-center justify-center">
                   <div className="text-center">
-                    <img src="/logo.png" alt="SupplySync Logo" className="w-20 h-20 lg:w-24 lg:h-24 mx-auto object-contain mb-3 drop-shadow-md" />
+                    <img src="/logo.png" alt="SupplySync Logo" className="w-20 h-20 lg:w-24 lg:h-24 mx-auto object-contain mb-3 drop-shadow-md dark:hidden" />
+                    <img src="/logo-dark.png" alt="SupplySync Logo" className="w-20 h-20 lg:w-24 lg:h-24 mx-auto object-contain mb-3 drop-shadow-md hidden dark:block" />
                     <span className="font-jakarta font-bold text-heading text-sm">Supply Sync</span>
                   </div>
                 </div>
