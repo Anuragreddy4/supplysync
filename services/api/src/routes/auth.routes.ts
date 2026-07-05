@@ -9,24 +9,33 @@ router.post('/session', requireAuth, async (req: Request, res: Response): Promis
   try {
     const user = req.firebaseUser!;
     
-    // Find existing user
+    // Check if a user with this email already exists – email is unique in the DB
     let dbUser = await prisma.users.findUnique({
-      where: { firebase_uid: user.uid },
+      where: { email: user.email || '' },
     });
-
     if (!dbUser) {
+      // No existing user, create a new one
       dbUser = await prisma.users.create({
         data: {
           firebase_uid: user.uid,
           email: user.email || '',
           display_name: user.name || 'Unknown User',
           photo_url: user.picture || null,
-          role: null, 
+          role: null,
         },
       });
+    } else {
+      // Existing user – optionally update firebase_uid if it changed
+      if (dbUser.firebase_uid !== user.uid) {
+        dbUser = await prisma.users.update({
+          where: { id: dbUser.id },
+          data: { firebase_uid: user.uid },
+        });
+      }
     }
 
     res.json(successResponse(dbUser));
+  } catch (error) {
   } catch (error) {
     console.error('Session Error:', error);
     res.status(500).json(errorResponse('INTERNAL_SERVER_ERROR', `Failed to process session: ${error instanceof Error ? error.message : String(error)}`));
