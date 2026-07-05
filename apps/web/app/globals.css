@@ -52,7 +52,13 @@
     @apply shadow-card-hover;
   }
 
-  /* Bottom Dock: shadow utility used by the animated dock */
+  /* Bottom Navigation Dock */
+  .bottom-dock {
+    @apply fixed bottom-4 left-1/2 -translate-x-1/2 bg-white rounded-full shadow-dock px-2 py-2 z-50;
+    min-width: 420px;
+    max-width: 580px;
+    width: 90%;
+  }
 
   /* Status Pills */
   .status-pill {
