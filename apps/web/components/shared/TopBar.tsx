@@ -8,6 +8,7 @@ import { Bell } from "lucide-react";
 import { signOut } from "@/lib/firebase-client";
 import { apiFetch } from "@/lib/api-client";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageSelector } from "./LanguageSelector";
 
 
 interface TopBarProps {
@@ -38,7 +39,8 @@ export default function TopBar({ showSearch, onSearchClick }: TopBarProps) {
         </Link>
 
         {/* Right actions */}
-        <div className="flex items-center gap-3 relative">
+        <div className="flex items-center gap-2 relative">
+          <LanguageSelector />
           <ThemeToggle />
           <button className="relative p-2 text-muted hover:text-heading transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-slate-800" id="notifications-btn">
             <Bell className="w-5 h-5" />
