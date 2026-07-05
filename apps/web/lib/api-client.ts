@@ -1,6 +1,6 @@
 import { auth } from './firebase-client';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://supplysync-uizo.onrender.com/api';
+const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://supplysync-uizo.onrender.com/api' : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api');
 
 export class ApiError extends Error {
   code?: string;
@@ -48,7 +48,7 @@ export async function fetchApi<T = any>(
 export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
   const user = auth.currentUser;
   const token = user ? await user.getIdToken() : null;
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || 'https://supplysync-uizo.onrender.com/api';
+  const baseUrl = process.env.NODE_ENV === 'production' ? 'https://supplysync-uizo.onrender.com/api' : (process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api');
 
   const res = await fetch(`${baseUrl}${path}`, {
     ...options,

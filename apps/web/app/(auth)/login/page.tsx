@@ -46,8 +46,9 @@ export default function LoginPage() {
       } else {
         router.push("/select-role");
       }
-    } catch {
-      setError("Failed to create session. Is the API server running?");
+    } catch (err: any) {
+      console.error("Session creation error:", err);
+      setError(`Failed to create session: ${err.message || 'Is the API server running?'}`);
       setIsSigningIn(false);
     }
   };
