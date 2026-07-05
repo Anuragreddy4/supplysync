@@ -30,9 +30,7 @@ export default function TopBar({ showSearch, onSearchClick }: TopBarProps) {
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-16">
         {/* Logo */}
         <Link href={dashboardHref} className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-gradient-to-br from-buyer to-teal-400 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">S</span>
-          </div>
+          <img src="/logo.png" alt="SupplySync Logo" className="w-8 h-8 object-contain" />
           <span className="font-jakarta font-bold text-heading text-lg tracking-tight">
             Supply Sync
           </span>

@@ -74,9 +74,7 @@ export default function SelectRolePage() {
               className="text-center mb-10"
             >
               <Link href="/" className="inline-flex items-center gap-2 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-buyer to-teal-400 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">S</span>
-                </div>
+                <img src="/logo.png" alt="SupplySync Logo" className="w-10 h-10 object-contain drop-shadow-sm" />
               </Link>
               <h1 className="text-3xl md:text-4xl font-jakarta font-bold tracking-tight text-heading mb-3">
                 Create your account

@@ -214,9 +214,7 @@ export default function LoginPage() {
           transition={{ duration: 0.6 }}
           className="relative z-10 text-center px-12"
         >
-          <div className="w-20 h-20 mx-auto bg-gradient-to-br from-buyer to-teal-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-            <span className="text-white font-extrabold text-3xl">S</span>
-          </div>
+          <img src="/logo.png" alt="SupplySync Logo" className="w-20 h-20 mx-auto object-contain mb-6 drop-shadow-lg" />
           <h2 className="font-jakarta font-bold text-heading text-3xl mb-3">Supply Sync</h2>
           <p className="text-muted text-lg">Smarter sourcing, simplified.</p>
         </motion.div>
