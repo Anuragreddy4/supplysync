@@ -22,7 +22,7 @@ interface Order {
   id: string;
   quantity: number;
   total_price: number;
-  status: string;
+  status: "pending" | "confirmed" | "in_transit" | "delivered" | "cancelled";
   created_at: string;
   listings: {
     material_name: string;
